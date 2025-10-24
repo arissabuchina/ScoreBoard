@@ -10,38 +10,34 @@ void Game::addPlayer(std::string name) {
 }
 
 void Game::reset() {
-    /*for (auto &p : players) {
-        p.score = 501;
-        p.dartsThrown = 0;
-    }*/
     players.clear();
     currentPlayerIndex = 0;
     gameOver = false;
 }
 
+void Game::setStrategy(std::shared_ptr<GameStrategy> s) {
+    strategy = s;
+    
+}
+
+void Game::initialize(){
+    if (strategy) {
+        strategy->initializePlayers(players);
+    }
+}
+
 std::string Game::processLocation(std::pair<int, int> location) {
-    if (gameOver || players.empty()) return "Game Over!";
+    if (!strategy || gameOver || players.empty()) return "Game Over or strategy not set.";
 
     Player &p = players[currentPlayerIndex];
-    int points = getScoreFromLocation(location);
-    int newScore = p.score - points;
-    std::string result = p.name + " hit " + std::to_string(points) + " points.";
+    std::string result = strategy->processThrow(location, p);
 
-    if (newScore < 0) {
-        result += " Bust! Score stays at " + std::to_string(p.score);
-    } else if (newScore == 0) {
-        p.score = newScore;
-        result += " 🎯 " + p.name + " wins!";
+    if (strategy->isGameOver(players)) {
         gameOver = true;
-        return result;
-    } else {
-        p.score = newScore;
-        result += " Remaining: " + std::to_string(p.score);
+        return result + "\nGame Over!";
     }
 
-    // End of turn: move to next player
-    p.dartsThrown++;
-    if (p.dartsThrown >= 3 || newScore <= 0) {
+    if (p.dartsThrown >= 3) {
         p.dartsThrown = 0;
         nextPlayer();
     }
@@ -54,13 +50,11 @@ void Game::nextPlayer() {
 }
 
 std::string Game::getCurrentPlayerName() {
-    if (players.empty()) return "";
-    return players[currentPlayerIndex].name;
+    return players.empty() ? "" : players[currentPlayerIndex].name;
 }
 
 int Game::getCurrentPlayerScore() {
-    if (players.empty()) return 0;
-    return players[currentPlayerIndex].score;
+    return players.empty() ? 0 : players[currentPlayerIndex].score;
 }
 
 std::vector<Player> Game::getAllPlayers() const {
@@ -69,13 +63,4 @@ std::vector<Player> Game::getAllPlayers() const {
 
 bool Game::isGameOver() const {
     return gameOver;
-}
-
-// Basic scoring map (replace with actual dartboard logic later)
-int Game::getScoreFromLocation(std::pair<int, int> location) {
-    if (location == std::pair<int, int>(1, 1)) return 21;
-    if (location == std::pair<int, int>(2, 2)) return 40;
-    if (location == std::pair<int, int>(3, 3)) return 60;
-    if (location == std::pair<int, int>(4, 4)) return 20;
-    return 0;
 }

@@ -1,45 +1,37 @@
+#pragma once
 #ifndef GAME_H
 #define GAME_H
 
 #include <Arduino.h>
 #include <vector>
 #include <string>
+#include <memory>
+#include "Player.h"
+#include "GameStrategy.h"
 
-struct Player {
-    std::string name;
-    int score;
-    int dartsThrown;
-
-    // Default constructor
-    Player() : name(""), score(501), dartsThrown(0) {}
-
-    // Constructor that accepts a name
-    Player(const std::string &playerName)
-        : name(playerName), score(501), dartsThrown(0) {}
-};
 
 class Game {
-private:
-    std::vector<Player> players;
-    int currentPlayerIndex;
-    bool gameOver;
-
-    int getScoreFromLocation(std::pair<int, int> location);
-    void nextPlayer();
-
 public:
     Game();
-
     void addPlayer(std::string name);
     void reset();
-
+    void setStrategy(std::shared_ptr<GameStrategy> strategy);
+    void initialize();
     std::string processLocation(std::pair<int, int> location);
-
     std::string getCurrentPlayerName();
     int getCurrentPlayerScore();
     std::vector<Player> getAllPlayers() const;
-
     bool isGameOver() const;
+
+    int getScoreFromLocation(std::pair<int, int> location);
+
+private:
+    void nextPlayer();
+
+    std::vector<Player> players;
+    int currentPlayerIndex;
+    bool gameOver;
+    std::shared_ptr<GameStrategy> strategy;
 };
 
 #endif // GAME_H

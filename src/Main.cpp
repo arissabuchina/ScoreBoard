@@ -1,6 +1,7 @@
 #include <Arduino.h>
 #include "Game.h"
 #include "Communication.h"
+#include "GameFactory.h"
 
 Game game;
 Communication comm;
@@ -24,6 +25,20 @@ void setup() {
   Serial.println("--------------------------------------");
   Serial.println("Setup your game below:\n");
 
+  // Ask for game type
+  std::shared_ptr<GameStrategy> strategy = nullptr;
+  while (!strategy) {
+    String input = getUserInput("Enter game type (501, 301, Cricket, AroundTheClock): ");
+    std::string gameType = std::string(input.c_str());
+    strategy = GameFactory::createGame(gameType);
+    if (!strategy) {
+      Serial.println("Invalid game type. Try again.");
+    } else {
+      game.setStrategy(strategy);
+      Serial.printf("\n501Selected game: %s\n\n", gameType.c_str());
+    }
+  }
+
   // Ask for number of players
   int numPlayers = 0;
   while (numPlayers < 1 || numPlayers > 4) {
@@ -41,34 +56,33 @@ void setup() {
     game.addPlayer(playerName);
   }
 
+  game.initialize();
+
   Serial.println("\nGame setup complete! Starting simulation...");
   Serial.println("--------------------------------------\n");
 
   // Connect Communication → Game
   comm.onNewLocation([](std::pair<int, int> location) {
     std::string result = game.processLocation(location);
-    Serial.println(result.c_str()); // convert std::string → const char*
+    Serial.println(result.c_str());
 
-    // Show all player scores after each round
     Serial.println("\nCurrent Scores:");
     for (auto &p : game.getAllPlayers()) {
-      Serial.printf("  %s: %d\n", p.name.c_str(), p.score); // convert std::string → const char*
+      Serial.printf("  %s: %d\n", p.name.c_str(), p.score);
     }
 
     Serial.println("-------------------");
 
-    // Stop simulation if someone won
     if (game.isGameOver()) {
       Serial.println("GAME OVER! Resetting the board to play again.");
       delay(2000);
       game.reset();
-      setup(); // Call setup again to reinitialize after game over
+      //game.initialize();
+      setup();  // Restart setup for a new game
     }
   });
 
-  // Start the simulation
   comm.startSimulation();
-  
 }
 
 void loop() {
