@@ -17,7 +17,7 @@ Communication::Communication()
 void Communication::getLocations()
 {
     //501 Game - 2 Player - Player 1 Wins 
-    locations = { {3,3} ,
+    /*locations = { {3,3} ,
                   {2,2} ,
                   {4,4} ,
                   {3,3} ,
@@ -41,7 +41,31 @@ void Communication::getLocations()
                   {3,3} ,
                   {2,2} ,
                   {4,4} ,
-                  {3,3} ,};
+                  {3,3} ,}; */
+
+    //301 Game - 3 Player - Player 2 Wins
+    locations = { {3,3} ,
+                  {3,3} ,
+                  {3,3} ,
+                  {2,2} ,
+                  {2,2} ,
+                  {3,3} ,
+                  {4,4} ,
+                  {4,4} ,
+                  {4,4} ,
+                  {4,4} ,
+                  {4,4} ,
+                  {4,4} ,
+                  {3,3} ,
+                  {3,3} ,
+                  {4,4} ,
+                  {4,4} ,
+                  {2,2} ,
+                  {3,3} ,
+                  {4,4} , 
+                  {4,4} ,
+                  {4,4} ,
+                  {1,1} };
 
   
 }

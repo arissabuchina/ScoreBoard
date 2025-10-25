@@ -22,8 +22,9 @@ void setup() {
   delay(1000);
 
   Serial.println("Welcome to the Auto-Scoring Dart Game!");
-  Serial.println("--------------------------------------");
   Serial.println("Setup your game below:\n");
+  Serial.println("--------------------------------------");
+  
 
   // Ask for game type
   std::shared_ptr<GameStrategy> strategy = nullptr;
@@ -35,7 +36,7 @@ void setup() {
       Serial.println("Invalid game type. Try again.");
     } else {
       game.setStrategy(strategy);
-      Serial.printf("\n501Selected game: %s\n\n", gameType.c_str());
+      Serial.printf("\nSelected game: %s\n\n", gameType.c_str());
     }
   }
 
@@ -61,7 +62,6 @@ void setup() {
   Serial.println("\nGame setup complete! Starting simulation...");
   Serial.println("--------------------------------------\n");
 
-  // Connect Communication → Game
   comm.onNewLocation([](std::pair<int, int> location) {
     std::string result = game.processLocation(location);
     Serial.println(result.c_str());
@@ -77,7 +77,6 @@ void setup() {
       Serial.println("GAME OVER! Resetting the board to play again.");
       delay(2000);
       game.reset();
-      //game.initialize();
       setup();  // Restart setup for a new game
     }
   });
