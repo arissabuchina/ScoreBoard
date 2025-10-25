@@ -165,7 +165,7 @@ void Communication::startSimulation() {
 
 void Communication::update() 
 {
-    if (millis() - lastUpdateTime > 2000) 
+    if (millis() - lastUpdateTime > 500) 
     {
         lastUpdateTime = millis();
         if (currentIndex < locations.size()) 

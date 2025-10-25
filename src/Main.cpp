@@ -2,9 +2,11 @@
 #include "Game.h"
 #include "Communication.h"
 #include "GameFactory.h"
+#include "Calibration.h"
 
 Game game;
 Communication comm;
+Calibration calib;
 
 // Helper function to get user input from Serial
 String getUserInput(const char* prompt) {
@@ -26,10 +28,27 @@ void setup() {
   Serial.println("--------------------------------------");
   
 
+
+  
+  String calibInput = getUserInput("Run calibration? (y/n): ");
+  std::string choice = std::string(calibInput.c_str());
+
+  if (choice == "y"|| choice == "Y") {
+    // Demo true vs estimated points
+    std::vector<std::pair<float, float>> truePts = {{1,1}, {2,2}, {3,3}};
+    std::vector<std::pair<float, float>> estPts  = {{1.1,0.9}, {2.1,1.9}, {3.05,2.95}};
+
+    calib.setLocations(truePts, estPts);
+    calib.runDemo();
+  }
+
+
+
+
   // Ask for game type
   std::shared_ptr<GameStrategy> strategy = nullptr;
   while (!strategy) {
-    String input = getUserInput("Enter game type (501, 301, Cricket, AroundTheWorld): ");
+    String input = getUserInput("/nEnter game type (501, 301, Cricket, AroundTheWorld): ");
     std::string gameType = std::string(input.c_str());
     strategy = GameFactory::createGame(gameType);
     if (!strategy) {
