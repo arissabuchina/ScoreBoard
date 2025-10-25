@@ -1,11 +1,11 @@
 #include <memory>
 #include <string>
-#include "GameStrategy.h"
-#include "Game501.h"
-#include "Game301.h"
 #include <algorithm>
-#include "GameCricket.h"
-#include "GameAroundTheWorld.h"
+#include "GameStrategy.h"
+#include "GameStrategies/Game501.h"
+#include "GameStrategies/Game301.h"
+#include "GameStrategies/GameCricket.h"
+#include "GameStrategies/GameAroundTheWorld.h"
 
 class GameFactory {
 public:

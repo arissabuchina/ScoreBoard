@@ -1,6 +1,7 @@
 {
     "files.associations": {
         "dense": "cpp",
-        "core": "cpp"
+        "core": "cpp",
+        "algorithm": "cpp"
     }
 }

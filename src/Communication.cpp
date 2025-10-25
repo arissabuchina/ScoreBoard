@@ -44,7 +44,7 @@ void Communication::getLocations()
                   {3,3}}; */
 
     //301 Game - 3 Player - Player 2 Wins
-    /*locations = { {3,3} ,
+    locations = { {3,3} ,
                   {3,3} ,
                   {3,3} ,
                   {2,2} ,
@@ -65,7 +65,7 @@ void Communication::getLocations()
                   {4,4} , 
                   {4,4} ,
                   {4,4} ,
-                  {1,1} };*/
+                  {1,1} };
     
     //Around the World - 1 Player
     /*locations = {
@@ -101,7 +101,7 @@ void Communication::getLocations()
     };*/
 
     //Cricket - 2 Player 
-    locations = {
+    /*locations = {
     // Player 1
     {1,1}, {1,1}, {1,1},  // 1 closes 20
     
@@ -154,7 +154,7 @@ void Communication::getLocations()
     {3,3}, {3,3}, {3,3}   // 1 closes bullseye
 
     //Player 1 should win
-    };
+    }; */
 
   
 }

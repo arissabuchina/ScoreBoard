@@ -1,4 +1,4 @@
-#include "GameAroundTheWorld.h"
+#include "GameStrategies/GameAroundTheWorld.h"
 
 void GameAroundTheWorld::initializePlayers(std::vector<Player>& players) {
     for (auto& p : players) {
@@ -12,11 +12,11 @@ void GameAroundTheWorld::initializePlayers(std::vector<Player>& players) {
 
 std::string GameAroundTheWorld::processThrow(std::pair<int, int> location, Player& player) {
     int hitNumber = getNumberFromLocation(location);
-    std::string result = player.name + " aimed for " + std::to_string(player.score) + " and hit " + std::to_string(hitNumber) + ".";
+    std::string result = player.name + " aimed for " + std::to_string(player.score) + " and hit " + std::to_string(hitNumber) + ". ";
 
     if (hitNumber == player.score) {
         player.score++;
-        result += " 🎯 Nice! Next target: " + std::to_string(player.score <= 20 ? player.score : 20);
+        result += "Nice! Next target: " + std::to_string(player.score <= 20 ? player.score : 20);
     } else {
         result += " Miss!";
     }

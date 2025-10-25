@@ -1,5 +1,5 @@
 #include "Game.h"
-#include "GameCricket.h"
+#include "GameStrategies/GameCricket.h"
 
 Game::Game() {
     currentPlayerIndex = 0;

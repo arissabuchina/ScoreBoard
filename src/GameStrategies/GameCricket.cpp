@@ -1,4 +1,4 @@
-#include "GameCricket.h"
+#include "GameStrategies/GameCricket.h"
 #include <Arduino.h>
 
 // Initialize each player's Cricket stats
@@ -66,7 +66,7 @@ std::string GameCricket::processThrow(std::pair<int, int> location, Player& play
     int& playerHits = player.cricketHits[target];
     int opponentHits = opponent ? opponent->cricketHits[target] : 3;
 
-    std::string result = player.name + " hit " + std::to_string(target) + ".";
+    std::string result = player.name + " hit " + std::to_string(target) + ". ";
 
     if (playerHits < 3) {
         playerHits++;
