@@ -4,8 +4,8 @@
 #include "Game501.h"
 #include "Game301.h"
 #include <algorithm>
-//#include "GameCricket.h"
-//#include "GameAroundTheClock.h"
+#include "GameCricket.h"
+#include "GameAroundTheWorld.h"
 
 class GameFactory {
 public:
@@ -13,8 +13,8 @@ public:
         normalizeString(type);
         if (type == "501") return std::make_shared<Game501>();
         if (type == "301") return std::make_shared<Game301>();
-        //if (type == "cricket") return std::make_shared<GameCricket>();
-        //if (type == "aroundtheclock") return std::make_shared<GameAroundTheClock>();
+        if (type == "cricket") return std::make_shared<GameCricket>();
+        if (type == "aroundtheworld") return std::make_shared<GameAroundTheWorld>();
         return nullptr;
     }
 

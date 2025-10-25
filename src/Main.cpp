@@ -29,7 +29,7 @@ void setup() {
   // Ask for game type
   std::shared_ptr<GameStrategy> strategy = nullptr;
   while (!strategy) {
-    String input = getUserInput("Enter game type (501, 301, Cricket, AroundTheClock): ");
+    String input = getUserInput("Enter game type (501, 301, Cricket, AroundTheWorld): ");
     std::string gameType = std::string(input.c_str());
     strategy = GameFactory::createGame(gameType);
     if (!strategy) {
@@ -66,6 +66,14 @@ void setup() {
     std::string result = game.processLocation(location);
     Serial.println(result.c_str());
 
+    if (game.isGameOver()) {
+      Serial.println("GAME OVER! Resetting the board to play again.");
+      Serial.println("-------------------");
+      delay(2000);
+      game.reset();
+      setup();  // Restart setup for a new game
+    }
+
     Serial.println("\nCurrent Scores:");
     for (auto &p : game.getAllPlayers()) {
       Serial.printf("  %s: %d\n", p.name.c_str(), p.score);
@@ -73,12 +81,7 @@ void setup() {
 
     Serial.println("-------------------");
 
-    if (game.isGameOver()) {
-      Serial.println("GAME OVER! Resetting the board to play again.");
-      delay(2000);
-      game.reset();
-      setup();  // Restart setup for a new game
-    }
+    
   });
 
   comm.startSimulation();

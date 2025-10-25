@@ -1,4 +1,5 @@
 #include "Game.h"
+#include "GameCricket.h"
 
 Game::Game() {
     currentPlayerIndex = 0;
@@ -22,6 +23,7 @@ void Game::setStrategy(std::shared_ptr<GameStrategy> s) {
 
 void Game::initialize(){
     if (strategy) {
+        strategy->setPlayersRef(players);
         strategy->initializePlayers(players);
     }
 }
@@ -34,7 +36,7 @@ std::string Game::processLocation(std::pair<int, int> location) {
 
     if (strategy->isGameOver(players)) {
         gameOver = true;
-        return result + "\nGame Over!";
+        return result;
     }
 
     if (p.dartsThrown >= 3) {
