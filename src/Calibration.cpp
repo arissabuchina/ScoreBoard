@@ -63,6 +63,10 @@ void Calibration::computeAffineCoefficients() {
     c = Hinv[0][0]*yVec[0] + Hinv[0][1]*yVec[1] + Hinv[0][2]*yVec[2];
     d = Hinv[1][0]*yVec[0] + Hinv[1][1]*yVec[1] + Hinv[1][2]*yVec[2];
     f = Hinv[2][0]*yVec[0] + Hinv[2][1]*yVec[1] + Hinv[2][2]*yVec[2];
+
+    std::cout << "\nComputed Affine Coefficients:\n"
+              << "a: " << a << ", b: " << b << ", e: " << e << "\n"
+              << "c: " << c << ", d: " << d << ", f: " << f << "\n";
 }
 
 std::pair<float, float> Calibration::applyCalibration(const std::pair<float, float>& estPoint) const {

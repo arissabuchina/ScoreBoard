@@ -23,7 +23,7 @@ public:
     std::vector<Player> getAllPlayers() const;
     bool isGameOver() const;
 
-    int getScoreFromLocation(std::pair<int, int> location);
+    //int getScoreFromLocation(std::pair<int, int> location);
 
 private:
     void nextPlayer();

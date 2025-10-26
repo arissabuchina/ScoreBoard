@@ -48,7 +48,7 @@ void setup() {
   // Ask for game type
   std::shared_ptr<GameStrategy> strategy = nullptr;
   while (!strategy) {
-    String input = getUserInput("/nEnter game type (501, 301, Cricket, AroundTheWorld): ");
+    String input = getUserInput("\nEnter game type (501, 301, Cricket, AroundTheWorld): ");
     std::string gameType = std::string(input.c_str());
     strategy = GameFactory::createGame(gameType);
     if (!strategy) {
