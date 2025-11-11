@@ -1,4 +1,4 @@
-#include <Arduino.h>
+/*#include <Arduino.h>
 #include "Game.h"
 #include "Communication.h"
 #include "GameFactory.h"
@@ -109,3 +109,64 @@ void setup() {
 void loop() {
   comm.update();
 }
+  */
+
+#include <Arduino.h>
+#include <Adafruit_RA8875.h>
+#include "UIManager.h"
+#include "Game.h"
+#include "Communication.h"
+
+#define RA8875_CS   17
+#define RA8875_RST  16
+#define RA8875_INT 7
+
+Adafruit_RA8875 tft = Adafruit_RA8875(RA8875_CS, RA8875_RST);
+Game game;
+Communication comm;
+
+UIManager ui(tft, game, comm);
+
+void setup() {
+  Serial.begin(115200);
+
+  //sck, miso, mosi
+  SPI.begin(3, 8, 18);
+
+  if (!tft.begin(RA8875_800x480)) {
+    Serial.println("Display not found");
+    while (1);
+  }
+
+  tft.displayOn(true);
+  tft.GPIOX(true);
+  tft.PWM1config(true, RA8875_PWM_CLK_DIV1024);
+  tft.PWM1out(255);
+
+  // Enable touch inside the RA8875 chip
+  tft.touchEnable(true);
+
+  // Setup the INT pin
+  pinMode(RA8875_INT, INPUT);
+
+  ui.begin();
+
+}
+
+void loop() {
+
+  // TOUCH HANDLING (the part you needed integrated)
+  if (!digitalRead(RA8875_INT)) {      // INT goes LOW when touch occurs
+    uint16_t tx, ty;
+    if (tft.touchRead(&tx, &ty)) {     // Read coordinates
+      ui.handleTouch(tx, ty);          // Pass to your UI logic
+    }
+  }
+
+  ui.update();
+  comm.update(); // still handles dart detection
+}
+
+
+
+

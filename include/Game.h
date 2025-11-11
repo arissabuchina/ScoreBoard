@@ -17,11 +17,15 @@ public:
     void reset();
     void setStrategy(std::shared_ptr<GameStrategy> strategy);
     void initialize();
+
+    //switch to floats - in mm 
     std::string processLocation(std::pair<int, int> location);
     std::string getCurrentPlayerName();
     int getCurrentPlayerScore();
     std::vector<Player> getAllPlayers() const;
     bool isGameOver() const;
+
+    void startGame();
 
     //int getScoreFromLocation(std::pair<int, int> location);
 

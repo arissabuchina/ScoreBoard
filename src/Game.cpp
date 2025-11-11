@@ -66,3 +66,8 @@ std::vector<Player> Game::getAllPlayers() const {
 bool Game::isGameOver() const {
     return gameOver;
 }
+
+
+void Game::startGame() {
+    
+}

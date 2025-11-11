@@ -165,6 +165,8 @@ void Communication::startSimulation() {
 
 void Communication::update() 
 {
+
+    //need to make emmits like trains to get locations and send??? 
     if (millis() - lastUpdateTime > 500) 
     {
         lastUpdateTime = millis();
