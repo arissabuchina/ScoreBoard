@@ -121,6 +121,8 @@ void loop() {
 #define RA8875_RST  16
 #define RA8875_INT 7
 
+
+
 Adafruit_RA8875 tft = Adafruit_RA8875(RA8875_CS, RA8875_RST);
 Game game;
 Communication comm;
@@ -166,6 +168,9 @@ void loop() {
   ui.update();
   comm.update(); // still handles dart detection
 }
+
+
+
 
 
 

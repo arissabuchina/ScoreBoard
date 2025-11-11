@@ -3,6 +3,7 @@
 
 #include <Adafruit_RA8875.h>
 #include "Game.h"
+#include "GameFactory.h"
 #include "Communication.h"
 
 enum UIState {
@@ -46,6 +47,8 @@ public:
 
   void drawGameModeSelectScreen();
 
+  void drawPlayerCountScreen();
+  void waitForTouchRelease();
 };
 
 #endif

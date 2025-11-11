@@ -7,15 +7,30 @@ UIManager::UIManager(Adafruit_RA8875 &display, Game &gameRef, Communication &com
 
 void UIManager::begin() {
   tft.fillScreen(RA8875_BLACK);
+
+  tft.PWM1config(true, RA8875_PWM_CLK_DIV1024); // Enable TFT backlight control
+  tft.PWM1out(255);
+
   drawHomeScreen();
   tft.touchEnable(true); // <<< REQUIRED
 
 }
 
-void UIManager::update() {
-    if (tft.touched()) {
+
+
+void UIManager::update() 
+{
+    if (tft.touched()) 
+    {
         uint16_t rawX, rawY;
         tft.touchRead(&rawX, &rawY);
+
+        // --- ADD THIS ---
+        Serial.print("RAW Touch: ");
+        Serial.print(rawX);
+        Serial.print(", ");
+        Serial.println(rawY);
+        // ----------------
 
         uint16_t x = mapTouchX(rawX);
         uint16_t y = mapTouchY(rawY);
@@ -25,7 +40,9 @@ void UIManager::update() {
 }
 
 
-void UIManager::drawHomeScreen() {
+
+void UIManager::drawHomeScreen() 
+{
   tft.fillScreen(RA8875_BLACK);
 
   tft.textMode();
@@ -35,9 +52,11 @@ void UIManager::drawHomeScreen() {
   tft.textWrite("Auto-Scoring Dartboard");
 
   drawButton(startButton);
+
 }
 
-void UIManager::handleHomeTouch() {
+void UIManager::handleHomeTouch() 
+{
   uint16_t x, y;
   if (!readTouch(x, y)) return;
   if (buttonPressed(startButton, x, y)) {
@@ -48,6 +67,7 @@ void UIManager::handleHomeTouch() {
     tft.textEnlarge(1);
     tft.textWrite("Game Select Screen (coming next)");
   }
+  
 }
 
 bool UIManager::readTouch(uint16_t &x, uint16_t &y) {
@@ -73,64 +93,184 @@ void UIManager::drawButton(const Button &btn) {
 }
 
 
-
 /*void UIManager::handleTouch(uint16_t x, uint16_t y) {
 
-    // Home Screen Start Button
-    if (currentState == HOME) {
-        if (x >= 100 && x <= 300 && y >= 100 && y <= 180) {
-            drawGameModeSelectScreen();
-            currentState = SELECT_GAME;
-        }
+  Serial.print("Mapped Touch: ");
+  Serial.print(x);
+  Serial.print(", ");
+  Serial.println(y);
+
+  if (currentState == HOME) 
+  {
+    if (x >= 200 && x <= 450 && y >= 200 && y <= 350) 
+    {
+      Serial.println("Start button pressed!");
+      currentState = SELECT_GAME;
+      drawGameModeSelectScreen();
+      waitForTouchRelease();
+      return;
+    }
+  }
+
+  if (currentState == SELECT_GAME) 
+  {
+        
+    if (x >= 0 && x <= 300) 
+    {
+      if (y >= 0 && y <= 180) 
+      {
+        game.setStrategy(GameFactory::createGame("501"));
+        Serial.println("501 selected");
+      } 
+      else if (y >= 200 && y <= 280) 
+      {
+        game.setStrategy(GameFactory::createGame("301"));
+        Serial.println("301 selected");
+      } 
+      else if (y >= 300 && y <= 380) 
+      {
+        game.setStrategy(GameFactory::createGame("Cricket"));
+        Serial.println("Cricket selected");
+      } 
+      else if (y >= 400 && y <= 480) 
+      {
+        game.setStrategy(GameFactory::createGame("AroundTheWorld"));
+        Serial.println("Around The World selected");
+      } 
+      else 
+      {
+        return; // touch outside buttons
+      }
+
+      // After selection, move to player count screen
+      currentState = SELECT_PLAYERS;
+      drawPlayerCountScreen();
+      waitForTouchRelease();
+
     }
 
-    if (currentState == SELECT_GAME) {
-        // We will add options here later
-    }
+  }
 
-    // Additional screens will be added later...
 }*/
 
 void UIManager::handleTouch(uint16_t x, uint16_t y) {
-    Serial.print("Mapped Touch: ");
-    Serial.print(x);
-    Serial.print(", ");
-    Serial.println(y);
+  Serial.print("Mapped Touch: ");
+  Serial.print(x);
+  Serial.print(", ");
+  Serial.println(y);
 
-    if (currentState == HOME) {
-        if (x >= 40 && x <= 300 && y >= 40 && y <= 180) {
-            Serial.println("Start button pressed!");
-            drawGameModeSelectScreen();
-            currentState = SELECT_GAME;
-            return;
-        }
-    }
+  switch(currentState) {
 
-    if (currentState == SELECT_GAME) {
-        // We will add options here later
+    case HOME:
+      if (x >= 200 && x <= 450 && y >= 200 && y <= 350) {
+        Serial.println("Start button pressed!");
+        
+        currentState = SELECT_GAME;
         drawGameModeSelectScreen();
-    }
-}
+        waitForTouchRelease();
+        
+      }
+      break;
 
+
+    case SELECT_GAME:
+      // Left side zone only (adjust later if needed)
+      if (x >= 0 && x <= 400) {
+
+        if (y >= 100 && y <= 160) {
+          game.setStrategy(GameFactory::createGame("501"));
+          Serial.println("501 selected");
+        }
+        else if (y >= 200 && y <= 260) {
+          game.setStrategy(GameFactory::createGame("301"));
+          Serial.println("301 selected");
+        }
+        else if (y >= 300 && y <= 360) {
+          game.setStrategy(GameFactory::createGame("Cricket"));
+          Serial.println("Cricket selected");
+        }
+        else if (y >= 400 && y <= 460) {
+          game.setStrategy(GameFactory::createGame("AroundTheWorld"));
+          Serial.println("Around the World selected");
+        }
+        else {
+          return; // touched outside buttons
+        }
+
+        currentState = SELECT_PLAYERS;
+        drawPlayerCountScreen();
+        waitForTouchRelease();
+        
+      }
+      break;
+
+
+    case SELECT_PLAYERS:
+      // Add handler logic here later
+      
+      break;
+  }
+}
 
 
 
 uint16_t UIManager::mapTouchX(uint16_t rawX) {
-    return map(rawX, 200, 3900, 0, 800);  // adjust after calibration
+    return map(rawX, 47, 981, 0, 800);  // adjust after calibration
 }
 
 uint16_t UIManager::mapTouchY(uint16_t rawY) {
-    return map(rawY, 200, 3800, 0, 480);  // adjust after calibration
+    return map(rawY, 147, 920, 0, 480);  // adjust after calibration
 }
 
 
-void UIManager::drawGameModeSelectScreen() {
-    tft.fillScreen(RA8875_BLUE);
+void UIManager::drawGameModeSelectScreen() 
+{
+    
+    tft.fillScreen(RA8875_GREEN);
     tft.textMode();
-    tft.textSetCursor(100, 100);
-    tft.textColor(RA8875_WHITE, RA8875_BLUE);
+    tft.textColor(RA8875_WHITE, RA8875_GREEN);
     tft.textEnlarge(1);
-    tft.textWrite("Select Game Mode (placeholder)");
+
+    tft.textSetCursor(100, 100);
+    tft.textWrite("501");
+
+    tft.textSetCursor(100, 200);
+    tft.textWrite("301");
+
+    tft.textSetCursor(100, 300);
+    tft.textWrite("Cricket");
+
+    tft.textSetCursor(100, 400);
+    tft.textWrite("Around The World");
 }
+
+void UIManager::drawPlayerCountScreen() {
+    tft.fillScreen(RA8875_WHITE);
+    tft.textMode();
+    tft.textColor(RA8875_WHITE, RA8875_BLACK);
+    tft.textEnlarge(1);
+
+    tft.textSetCursor(100, 100);
+    tft.textWrite("Select Number of Players:");
+
+    tft.textSetCursor(100, 200);
+    tft.textWrite("1 Player");
+
+    tft.textSetCursor(100, 300);
+    tft.textWrite("2 Players");
+
+    tft.textSetCursor(100, 400);
+    tft.textWrite("3 Players");
+
+    tft.textSetCursor(100, 500);
+    tft.textWrite("4 Players");
+}
+
+
+void UIManager::waitForTouchRelease() {
+    delay(5000); 
+}
+
+
 
 
