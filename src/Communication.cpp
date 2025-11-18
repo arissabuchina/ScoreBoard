@@ -4,6 +4,10 @@
 #include <vector>
 #include <utility>
 
+#include <WiFi.h>
+#include <esp_now.h>
+
+
 
 
 Communication::Communication() 
@@ -65,7 +69,8 @@ void Communication::getLocations()
                   {4,4} , 
                   {4,4} ,
                   {4,4} ,
-                  {1,1} };
+                  {1,1}
+                };
     
     //Around the World - 1 Player
     /*locations = {
@@ -167,7 +172,7 @@ void Communication::update()
 {
 
     //need to make emmits like trains to get locations and send??? 
-    if (millis() - lastUpdateTime > 500) 
+    if (millis() - lastUpdateTime > 2000) 
     {
         lastUpdateTime = millis();
         if (currentIndex < locations.size()) 
@@ -186,3 +191,24 @@ void Communication::stopSimulation()
 {
     currentIndex = locations.size(); // Stop further updates
 }
+
+void Communication::begin() {
+    // Initialize serial
+    Serial.begin(115200);
+
+    // Set Wi-Fi 
+    WiFi.mode(WIFI_STA);
+
+    // Print ESP's MAC address
+    Serial.print("ESP32 MAC Address: ");
+    Serial.println(WiFi.macAddress());
+
+    // Initialize ESP-NOW
+    if (esp_now_init() != ESP_OK) {
+        Serial.println("Error initializing ESP-NOW");
+        return;
+    }
+
+    Serial.println("ESP-NOW initialized successfully!");
+}
+

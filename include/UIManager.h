@@ -48,6 +48,7 @@ public:
   void drawGameModeSelectScreen();
 
   void drawPlayerCountScreen();
+  void drawPlayingScreen();
   void waitForTouchRelease();
 };
 

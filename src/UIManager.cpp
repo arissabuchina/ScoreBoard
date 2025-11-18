@@ -25,12 +25,10 @@ void UIManager::update()
         uint16_t rawX, rawY;
         tft.touchRead(&rawX, &rawY);
 
-        // --- ADD THIS ---
         Serial.print("RAW Touch: ");
         Serial.print(rawX);
         Serial.print(", ");
         Serial.println(rawY);
-        // ----------------
 
         uint16_t x = mapTouchX(rawX);
         uint16_t y = mapTouchY(rawY);
@@ -165,9 +163,11 @@ void UIManager::handleTouch(uint16_t x, uint16_t y) {
       if (x >= 200 && x <= 450 && y >= 200 && y <= 350) {
         Serial.println("Start button pressed!");
         
-        currentState = SELECT_GAME;
-        drawGameModeSelectScreen();
         waitForTouchRelease();
+        currentState = SELECT_GAME;
+        //waitForTouchRelease();
+        drawGameModeSelectScreen();
+        //waitForTouchRelease();
         
       }
       break;
@@ -175,7 +175,8 @@ void UIManager::handleTouch(uint16_t x, uint16_t y) {
 
     case SELECT_GAME:
       // Left side zone only (adjust later if needed)
-      if (x >= 0 && x <= 400) {
+      if (x >= 0 && x <= 400) 
+      {
 
         if (y >= 100 && y <= 160) {
           game.setStrategy(GameFactory::createGame("501"));
@@ -197,9 +198,11 @@ void UIManager::handleTouch(uint16_t x, uint16_t y) {
           return; // touched outside buttons
         }
 
-        currentState = SELECT_PLAYERS;
-        drawPlayerCountScreen();
         waitForTouchRelease();
+        currentState = SELECT_PLAYERS;
+        //waitForTouchRelease();
+        drawPlayerCountScreen();
+        //waitForTouchRelease();
         
       }
       break;
@@ -207,7 +210,50 @@ void UIManager::handleTouch(uint16_t x, uint16_t y) {
 
     case SELECT_PLAYERS:
       // Add handler logic here later
-      
+      int numPlayers = 0;
+      if (x >= 0 && x <= 400) 
+      {
+
+        if (y >= 100 && y <= 180) {
+          numPlayers = 1;
+          Serial.println("1 Player");
+          //set players
+          game.addPlayer("Player 1");
+        }
+        else if (y >= 200 && y <= 260) {
+          numPlayers = 2;
+          Serial.println("2 Players");
+
+          game.addPlayer("Player 1");
+          game.addPlayer("Player 2");
+        }
+        else if (y >= 300 && y <= 360) {
+          numPlayers = 3;
+          Serial.println("3 Players");
+
+          game.addPlayer("Player 1");
+          game.addPlayer("Player 2");
+          game.addPlayer("Player 3");
+        }
+        else if (y >= 400 && y <= 460) {
+          numPlayers = 4;
+          Serial.println("4 Players");
+
+          game.addPlayer("Player 1");
+          game.addPlayer("Player 2");
+          game.addPlayer("Player 3");
+          game.addPlayer("Player 4");
+        }
+        else {
+          return; // touched outside buttons
+        }
+
+        waitForTouchRelease();
+        currentState = PLAYING;
+        //waitForTouchRelease();
+        drawPlayingScreen();
+        //waitForTouchRelease();
+      }
       break;
   }
 }
@@ -226,9 +272,9 @@ uint16_t UIManager::mapTouchY(uint16_t rawY) {
 void UIManager::drawGameModeSelectScreen() 
 {
     
-    tft.fillScreen(RA8875_GREEN);
+    tft.fillScreen(RA8875_BLACK);
     tft.textMode();
-    tft.textColor(RA8875_WHITE, RA8875_GREEN);
+    tft.textColor(RA8875_WHITE, RA8875_BLACK);
     tft.textEnlarge(1);
 
     tft.textSetCursor(100, 100);
@@ -245,30 +291,105 @@ void UIManager::drawGameModeSelectScreen()
 }
 
 void UIManager::drawPlayerCountScreen() {
-    tft.fillScreen(RA8875_WHITE);
+    tft.fillScreen(RA8875_BLACK);
     tft.textMode();
     tft.textColor(RA8875_WHITE, RA8875_BLACK);
     tft.textEnlarge(1);
 
-    tft.textSetCursor(100, 100);
+    tft.textSetCursor(100, 50);
     tft.textWrite("Select Number of Players:");
 
-    tft.textSetCursor(100, 200);
+    tft.textSetCursor(100, 100);
     tft.textWrite("1 Player");
 
-    tft.textSetCursor(100, 300);
+    tft.textSetCursor(100, 200);
     tft.textWrite("2 Players");
 
-    tft.textSetCursor(100, 400);
+    tft.textSetCursor(100, 300);
     tft.textWrite("3 Players");
 
-    tft.textSetCursor(100, 500);
+    tft.textSetCursor(100, 400);
     tft.textWrite("4 Players");
 }
 
 
+void UIManager::drawPlayingScreen() 
+{
+    tft.fillScreen(RA8875_BLACK);
+    tft.textMode();
+    tft.textColor(RA8875_WHITE, RA8875_BLACK);
+    tft.textEnlarge(1);
+
+    // --- Header ---
+    tft.textSetCursor(280, 20);
+    tft.textWrite("Game In Progress");
+
+    tft.textSetCursor(100, 80);
+    tft.textWrite("Scores:");
+
+    comm.begin();
+
+    // --- Initialize game ---
+    game.initialize();
+
+    // --- Draw initial score area ---
+    int yStart = 120;
+    int yStep = 40;
+
+    for (size_t i = 0; i < game.getAllPlayers().size(); i++) {
+        const auto& p = game.getAllPlayers()[i];
+        tft.textSetCursor(100, yStart + i * yStep);
+        tft.textWrite((p.name + ": " + std::to_string(p.score)).c_str());
+    }
+
+    // --- Listen for location updates ---
+    comm.onNewLocation([this, yStart, yStep](std::pair<int, int> location) 
+    {
+        std::string result = game.processLocation(location);
+        Serial.println(result.c_str());
+
+        // --- Update score display ---
+        tft.fillRect(80, yStart, 400, 200, RA8875_BLACK);  // Clear score area
+        tft.textMode();
+        tft.textColor(RA8875_WHITE, RA8875_BLACK);
+        tft.textEnlarge(1);
+
+        auto players = game.getAllPlayers();
+        for (size_t i = 0; i < players.size(); i++) {
+            const auto& p = players[i];
+            tft.textSetCursor(100, yStart + i * yStep);
+            std::string line = p.name + ": " + std::to_string(p.score);
+            tft.textWrite(line.c_str());
+        }
+
+        // --- Optional: show last throw result ---
+        tft.fillRect(100, 320, 600, 40, RA8875_BLACK);
+        tft.textSetCursor(100, 320);
+        tft.textWrite(("Last throw: " + result).c_str());
+
+        // --- Game over check ---
+        if (game.isGameOver()) {
+            Serial.println("GAME OVER! Resetting the board to play again.");
+
+            tft.fillScreen(RA8875_RED);
+            tft.textColor(RA8875_WHITE, RA8875_RED);
+            tft.textSetCursor(250, 240);
+            tft.textEnlarge(2);
+            tft.textWrite("GAME OVER!");
+
+            delay(3000);
+            //game.reset();
+            //drawHomeScreen();
+        }
+    });
+
+    comm.startSimulation();
+}
+
+
+
 void UIManager::waitForTouchRelease() {
-    delay(5000); 
+    delay(1000); 
 }
 
 

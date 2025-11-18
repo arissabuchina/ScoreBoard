@@ -166,7 +166,7 @@ void loop() {
   }
 
   ui.update();
-  comm.update(); // still handles dart detection
+  comm.update(); // handles dart detection
 }
 
 

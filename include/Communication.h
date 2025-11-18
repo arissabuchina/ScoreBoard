@@ -23,6 +23,8 @@ public:
     void update();           // Periodically calls the callback
     void stopSimulation();   // Stops updates
 
+    void begin();
+
     void onNewLocation(std::function<void(std::pair<int, int>)> callbackFunc); // Register callback
 };
 
