@@ -8,8 +8,9 @@ void Game501::initializePlayers(std::vector<Player>& players) {
     }
 }
 
-std::string Game501::processThrow(std::pair<int, int> location, Player& player) {
-    int points = getScoreFromLocation(location);
+std::string Game501::processThrow(int points, Player& player) {
+    //int points = getScoreFromLocation(location);
+
     int newScore = player.score - points;
     std::string result = player.name + " hit " + std::to_string(points) + " points. ";
 
@@ -34,6 +35,7 @@ bool Game501::isGameOver(const std::vector<Player>& players) {
     return false;
 }
 
+/*
 int Game501::getScoreFromLocation(std::pair<int, int> location) {
     if (location == std::pair<int, int>(1, 1)) return 21;
     if (location == std::pair<int, int>(2, 2)) return 40;
@@ -41,3 +43,4 @@ int Game501::getScoreFromLocation(std::pair<int, int> location) {
     if (location == std::pair<int, int>(4, 4)) return 20;
     return 0;
 }
+    */

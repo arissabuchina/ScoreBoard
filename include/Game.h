@@ -1,4 +1,4 @@
-#pragma once
+
 #ifndef GAME_H
 #define GAME_H
 
@@ -19,13 +19,14 @@ public:
     void initialize();
 
     //switch to floats - in mm 
-    std::string processLocation(std::pair<int, int> location);
+    std::string processLocation(int points);
     std::string getCurrentPlayerName();
     int getCurrentPlayerScore();
     std::vector<Player> getAllPlayers() const;
     bool isGameOver() const;
 
     void startGame();
+    int getCurrentPlayerIndex() const;
 
     //int getScoreFromLocation(std::pair<int, int> location);
 

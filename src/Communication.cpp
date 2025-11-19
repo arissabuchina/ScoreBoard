@@ -21,8 +21,8 @@ Communication::Communication()
 void Communication::getLocations()
 {
     //301 Game - 3 Player - Player 2 Wins
-    locations = { {3,3} ,
-                  {3,3} ,
+    locations = { {0,0} ,
+                  {0,0} ,
                   {3,3} ,
                   {2,2} ,
                   {2,2} ,

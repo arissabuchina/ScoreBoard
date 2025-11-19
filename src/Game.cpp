@@ -28,11 +28,11 @@ void Game::initialize(){
     }
 }
 
-std::string Game::processLocation(std::pair<int, int> location) {
+std::string Game::processLocation(int points) {
     if (!strategy || gameOver || players.empty()) return "Game Over or strategy not set.";
 
     Player &p = players[currentPlayerIndex];
-    std::string result = strategy->processThrow(location, p);
+    std::string result = strategy->processThrow(points, p);
 
     if (strategy->isGameOver(players)) {
         gameOver = true;
@@ -67,7 +67,8 @@ bool Game::isGameOver() const {
     return gameOver;
 }
 
-
-void Game::startGame() {
-    
+int Game::getCurrentPlayerIndex() const 
+{ 
+    return currentPlayerIndex; 
 }
+

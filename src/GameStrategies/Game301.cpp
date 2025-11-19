@@ -8,8 +8,9 @@ void Game301::initializePlayers(std::vector<Player>& players) {
     }
 }
 
-std::string Game301::processThrow(std::pair<int, int> location, Player& player) {
-    int points = getScoreFromLocation(location);
+std::string Game301::processThrow(int points, Player& player) {
+    //int points = getScoreFromLocation(loaction);
+    
     int newScore = player.score - points;
     std::string result = player.name + " hit " + std::to_string(points) + " points. ";
 

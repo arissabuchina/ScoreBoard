@@ -10,11 +10,11 @@ void GameAroundTheWorld::initializePlayers(std::vector<Player>& players) {
     }
 }
 
-std::string GameAroundTheWorld::processThrow(std::pair<int, int> location, Player& player) {
-    int hitNumber = getNumberFromLocation(location);
-    std::string result = player.name + " aimed for " + std::to_string(player.score) + " and hit " + std::to_string(hitNumber) + ". ";
+std::string GameAroundTheWorld::processThrow(int points, Player& player) {
+    //int hitNumber = getNumberFromLocation(points);
+    std::string result = player.name + " aimed for " + std::to_string(player.score) + " and hit " + std::to_string(points) + ". ";
 
-    if (hitNumber == player.score) {
+    if (points == player.score) {
         player.score++;
         result += "Nice! Next target: " + std::to_string(player.score <= 20 ? player.score : 20);
     } else {

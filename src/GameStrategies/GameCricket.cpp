@@ -52,8 +52,8 @@ void GameCricket::initializePlayers(std::vector<Player>& players) {
     return result;
 }*/ 
 
-std::string GameCricket::processThrow(std::pair<int, int> location, Player& player) {
-    int target = getTargetFromLocation(location);
+std::string GameCricket::processThrow(int target, Player& player) {
+    //int target = getTargetFromLocation(location);
     player.dartsThrown++;
 
     if (target == -1)

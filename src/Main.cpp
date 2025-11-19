@@ -152,7 +152,6 @@ void setup() {
   pinMode(RA8875_INT, INPUT);
 
   ui.begin();
-
   comm.begin();
 
 }
@@ -162,6 +161,8 @@ void loop()
 
   ui.update();
   comm.update(); // handles dart detection
+
+  delay(10); // small delay to avoid overwhelming the CPU
 }
 
 
