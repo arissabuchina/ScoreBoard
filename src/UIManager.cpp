@@ -16,8 +16,6 @@ void UIManager::begin() {
 
 }
 
-
-
 void UIManager::update() 
 {
     if (tft.touched()) 
@@ -35,23 +33,10 @@ void UIManager::update()
 
         handleTouch(x, y);
     }
+  
 }
 
 
-
-void UIManager::drawHomeScreen() 
-{
-  tft.fillScreen(RA8875_BLACK);
-
-  tft.textMode();
-  tft.textColor(RA8875_WHITE, RA8875_BLACK);
-  tft.textEnlarge(2);
-  tft.textSetCursor(160, 120);
-  tft.textWrite("Auto-Scoring Dartboard");
-
-  drawButton(startButton);
-
-}
 
 void UIManager::handleHomeTouch() 
 {
@@ -79,77 +64,7 @@ bool UIManager::buttonPressed(const Button &btn, uint16_t x, uint16_t y) {
           y >= btn.y && y <= btn.y + btn.h);
 }
 
-void UIManager::drawButton(const Button &btn) {
-  tft.fillRect(btn.x, btn.y, btn.w, btn.h, RA8875_WHITE);
-  tft.drawRect(btn.x, btn.y, btn.w, btn.h, RA8875_BLACK);
 
-  tft.textMode();
-  tft.textColor(RA8875_BLACK, RA8875_WHITE);
-  tft.textEnlarge(1);
-  tft.textSetCursor(btn.x + 40, btn.y + 25);
-  tft.textWrite(btn.label);
-}
-
-
-/*void UIManager::handleTouch(uint16_t x, uint16_t y) {
-
-  Serial.print("Mapped Touch: ");
-  Serial.print(x);
-  Serial.print(", ");
-  Serial.println(y);
-
-  if (currentState == HOME) 
-  {
-    if (x >= 200 && x <= 450 && y >= 200 && y <= 350) 
-    {
-      Serial.println("Start button pressed!");
-      currentState = SELECT_GAME;
-      drawGameModeSelectScreen();
-      waitForTouchRelease();
-      return;
-    }
-  }
-
-  if (currentState == SELECT_GAME) 
-  {
-        
-    if (x >= 0 && x <= 300) 
-    {
-      if (y >= 0 && y <= 180) 
-      {
-        game.setStrategy(GameFactory::createGame("501"));
-        Serial.println("501 selected");
-      } 
-      else if (y >= 200 && y <= 280) 
-      {
-        game.setStrategy(GameFactory::createGame("301"));
-        Serial.println("301 selected");
-      } 
-      else if (y >= 300 && y <= 380) 
-      {
-        game.setStrategy(GameFactory::createGame("Cricket"));
-        Serial.println("Cricket selected");
-      } 
-      else if (y >= 400 && y <= 480) 
-      {
-        game.setStrategy(GameFactory::createGame("AroundTheWorld"));
-        Serial.println("Around The World selected");
-      } 
-      else 
-      {
-        return; // touch outside buttons
-      }
-
-      // After selection, move to player count screen
-      currentState = SELECT_PLAYERS;
-      drawPlayerCountScreen();
-      waitForTouchRelease();
-
-    }
-
-  }
-
-}*/
 
 void UIManager::handleTouch(uint16_t x, uint16_t y) {
   Serial.print("Mapped Touch: ");
@@ -163,11 +78,10 @@ void UIManager::handleTouch(uint16_t x, uint16_t y) {
       if (x >= 200 && x <= 450 && y >= 200 && y <= 350) {
         Serial.println("Start button pressed!");
         
-        waitForTouchRelease();
         currentState = SELECT_GAME;
-        //waitForTouchRelease();
+        flushTouchBuffer();
+        waitForTouchRelease();
         drawGameModeSelectScreen();
-        //waitForTouchRelease();
         
       }
       break;
@@ -198,18 +112,16 @@ void UIManager::handleTouch(uint16_t x, uint16_t y) {
           return; // touched outside buttons
         }
 
+        flushTouchBuffer();
         waitForTouchRelease();
         currentState = SELECT_PLAYERS;
-        //waitForTouchRelease();
         drawPlayerCountScreen();
-        //waitForTouchRelease();
         
       }
       break;
 
 
     case SELECT_PLAYERS:
-      // Add handler logic here later
       int numPlayers = 0;
       if (x >= 0 && x <= 400) 
       {
@@ -248,18 +160,17 @@ void UIManager::handleTouch(uint16_t x, uint16_t y) {
           return; // touched outside buttons
         }
 
+
+        flushTouchBuffer();
         waitForTouchRelease();
         currentState = PLAYING;
-        //waitForTouchRelease();
         drawPlayingScreen();
-        //waitForTouchRelease();
       }
       break;
   }
 }
 
-
-
+//calibrating screen touch coordinates to actual pixel coordinates
 uint16_t UIManager::mapTouchX(uint16_t rawX) {
     return map(rawX, 47, 981, 0, 800);  // adjust after calibration
 }
@@ -268,6 +179,58 @@ uint16_t UIManager::mapTouchY(uint16_t rawY) {
     return map(rawY, 147, 920, 0, 480);  // adjust after calibration
 }
 
+
+void UIManager::waitForTouchRelease() {
+    // Wait until the RA8875 no longer reports a press
+    while (tft.touched()) {
+        delay(10);
+    }
+
+    // Ensure it STAYS unpressed for ~150ms (no bounces)
+    unsigned long t = millis();
+    while (millis() - t < 150) {
+        if (tft.touched()) {  
+            t = millis();     // restart wait
+        }
+        delay(5);
+    }
+}
+
+void UIManager::flushTouchBuffer() {
+    uint16_t x, y;
+
+    // Read until no touches left
+    while (tft.touched()) {
+        tft.touchRead(&x, &y);
+        delay(5);
+    }
+}
+
+
+void UIManager::drawButton(const Button &btn) {
+  tft.fillRect(btn.x, btn.y, btn.w, btn.h, RA8875_WHITE);
+  tft.drawRect(btn.x, btn.y, btn.w, btn.h, RA8875_BLACK);
+
+  tft.textMode();
+  tft.textColor(RA8875_BLACK, RA8875_WHITE);
+  tft.textEnlarge(1);
+  tft.textSetCursor(btn.x + 40, btn.y + 25);
+  tft.textWrite(btn.label);
+}
+
+void UIManager::drawHomeScreen() 
+{
+  tft.fillScreen(RA8875_BLACK);
+
+  tft.textMode();
+  tft.textColor(RA8875_WHITE, RA8875_BLACK);
+  tft.textEnlarge(2);
+  tft.textSetCursor(160, 120);
+  tft.textWrite("Auto-Scoring Dartboard");
+
+  drawButton(startButton);
+
+}
 
 void UIManager::drawGameModeSelectScreen() 
 {
@@ -312,7 +275,6 @@ void UIManager::drawPlayerCountScreen() {
     tft.textWrite("4 Players");
 }
 
-
 void UIManager::drawPlayingScreen() 
 {
     tft.fillScreen(RA8875_BLACK);
@@ -327,7 +289,7 @@ void UIManager::drawPlayingScreen()
     tft.textSetCursor(100, 80);
     tft.textWrite("Scores:");
 
-    comm.begin();
+    //comm.begin();
 
     // --- Initialize game ---
     game.initialize();
@@ -377,7 +339,7 @@ void UIManager::drawPlayingScreen()
             tft.textEnlarge(2);
             tft.textWrite("GAME OVER!");
 
-            delay(3000);
+            //delay(3000);
             //game.reset();
             //drawHomeScreen();
         }
@@ -385,13 +347,4 @@ void UIManager::drawPlayingScreen()
 
     comm.startSimulation();
 }
-
-
-
-void UIManager::waitForTouchRelease() {
-    delay(1000); 
-}
-
-
-
 

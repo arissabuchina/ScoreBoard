@@ -50,6 +50,7 @@ public:
   void drawPlayerCountScreen();
   void drawPlayingScreen();
   void waitForTouchRelease();
+  void flushTouchBuffer();
 };
 
 #endif

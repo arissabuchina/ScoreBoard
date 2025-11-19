@@ -20,33 +20,6 @@ Communication::Communication()
 
 void Communication::getLocations()
 {
-    //501 Game - 2 Player - Player 1 Wins 
-    /*locations = { {3,3} ,
-                  {2,2} ,
-                  {4,4} ,
-                  {3,3} ,
-                  {2,2} ,
-                  {4,4} ,
-                  {3,3} ,
-                  {3,3} ,
-                  {3,3} ,
-                  {3,3} ,
-                  {3,3} ,
-                  {3,3} ,
-                  {3,3} ,
-                  {3,3} ,
-                  {3,3} ,
-                  {3,3} ,
-                  {3,3} ,
-                  {3,3} ,
-                  {2,2} ,
-                  {3,3} ,
-                  {1,1} , 
-                  {3,3} ,
-                  {2,2} ,
-                  {4,4} ,
-                  {3,3}}; */
-
     //301 Game - 3 Player - Player 2 Wins
     locations = { {3,3} ,
                   {3,3} ,
@@ -72,94 +45,6 @@ void Communication::getLocations()
                   {1,1}
                 };
     
-    //Around the World - 1 Player
-    /*locations = {
-        {1,1},
-        {2,2},
-        {3,3},
-        
-        {5,5},
-        
-        {4,4},
-        {5,5}, 
-        {6,6},
-        {7,7},
-        {8,8}, 
-        {9,9},
-
-        {11, 11},
-
-        {10,10},
-        {11,11},
-        {12,12},
-        {13,13},
-        {14,14},
-        {15,15},
-        {16,16},
-        {17,17},
-        {18,18},
-
-        {20, 20},
-
-        {19,19},
-        {20,20}
-    };*/
-
-    //Cricket - 2 Player 
-    /*locations = {
-    // Player 1
-    {1,1}, {1,1}, {1,1},  // 1 closes 20
-    
-    // Player 2
-    {1,2}, {1,2}, {1,2},  // 2 closes 19
-
-    // Player 1
-    {1,1}, {1,1}, {1,1},  // 1 scores on 20 three times  
-
-    // Player 2
-    {1,1}, {1,1}, {1,1},  //2 closes out 20 - NO MORE SCORING 20
-
-    // Player 1
-    {1,1}, {1,1}, {1,2},  // 1 hits 20 twice for no score - 1/3 on 19 
-
-    // Player 2
-    {1,2}, {1,2}, {1,2},  // 2 score on 19 three times
-
-    // Player 1
-    {1,2}, {1,2}, {1,2},  // 1 closes 19
-
-    // Player 2
-    {1,3}, {1,3}, {1,3},  // 2 closes 18
-
-    // Player 1
-    {1,3}, {1,3}, {1,3},  // 1 closes 18 
-
-    // Player 2
-    {2,1}, {2,1}, {2,1},  // 2 closes 17
-
-    // Player 1
-    {2,1}, {2,1}, {2,1},  // 1 closes 17
-
-    // Player 2
-    {2,2}, {2,2}, {2,2},  // 2 closes 16
-
-    // Player 1
-    {2,2}, {2,2}, {2,2},  // 1 closes 16
-
-    // Player 2
-    {2,3}, {2,3}, {2,3},  // 2 closes 15
-
-    // Player 1
-    {2,3}, {2,3}, {2,3},  // 1 closes 15
-
-    // Player 2
-    {3,3}, {3,3}, {3,3},  // 2 closes bullseye
-
-    // Player 1
-    {3,3}, {3,3}, {3,3}   // 1 closes bullseye
-
-    //Player 1 should win
-    }; */
 
   
 }

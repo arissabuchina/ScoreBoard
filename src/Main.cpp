@@ -153,17 +153,12 @@ void setup() {
 
   ui.begin();
 
+  comm.begin();
+
 }
 
-void loop() {
-
-  // TOUCH HANDLING (the part you needed integrated)
-  if (!digitalRead(RA8875_INT)) {      // INT goes LOW when touch occurs
-    uint16_t tx, ty;
-    if (tft.touchRead(&tx, &ty)) {     // Read coordinates
-      ui.handleTouch(tx, ty);          // Pass to your UI logic
-    }
-  }
+void loop() 
+{
 
   ui.update();
   comm.update(); // handles dart detection
