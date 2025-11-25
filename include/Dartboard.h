@@ -14,8 +14,8 @@ namespace DartConfig {
 
 // Standard sector order (12 o'clock = 20) clockwise
 static const int SECTOR_ORDER[20] = {
-    20, 1, 18, 4, 13, 6, 10, 15, 2, 17,
-     3,19, 7,16, 8,11,14, 9,12, 5
+    20, 1, 18, 4, 13, 6, 10, 15, 2, 17, 
+    3, 19, 7, 16, 8, 11, 14, 9, 12, 5
 };
 
 // draw the dartboard centered at (cx,cy) in pixels, using px_per_mm scale.

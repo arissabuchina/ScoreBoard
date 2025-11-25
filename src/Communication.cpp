@@ -20,29 +20,16 @@ Communication::Communication()
 
 void Communication::getLocations()
 {
-    //301 Game - 3 Player - Player 2 Wins
     locations = { {0,0} ,
                   {0,0} ,
-                  {3,3} ,
-                  {2,2} ,
-                  {2,2} ,
-                  {3,3} ,
-                  {4,4} ,
-                  {4,4} ,
-                  {4,4} ,
-                  {4,4} ,
-                  {4,4} ,
-                  {4,4} ,
-                  {3,3} ,
-                  {3,3} ,
-                  {4,4} ,
-                  {4,4} ,
-                  {2,2} ,
-                  {3,3} ,
-                  {4,4} , 
-                  {4,4} ,
-                  {4,4} ,
-                  {1,1}
+                  {50,50} ,
+                  {100,0} ,
+                  {0,200},
+                  {0,0} ,
+                  {0,0} ,
+                  {50,50} ,
+                  {100,0} ,
+                  {0,200}
                 };
     
 
@@ -57,7 +44,7 @@ void Communication::update()
 {
 
     //need to make emmits like trains to get locations and send??? 
-    if (millis() - lastUpdateTime > 2000) 
+    if (millis() - lastUpdateTime > 5000) 
     {
         lastUpdateTime = millis();
         if (currentIndex < locations.size()) 

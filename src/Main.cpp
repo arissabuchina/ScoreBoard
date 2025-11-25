@@ -121,6 +121,9 @@ void loop() {
 #define RA8875_RST  16
 #define RA8875_INT 7
 
+#define VRX_PIN 11
+#define VRY_PIN 13
+
 
 
 Adafruit_RA8875 tft = Adafruit_RA8875(RA8875_CS, RA8875_RST);

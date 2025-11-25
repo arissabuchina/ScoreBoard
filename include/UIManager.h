@@ -67,6 +67,10 @@ public:
   void drawPlayerCountScreen();
   void drawPlayingScreen();
   void redrawScorePanel();
+
+  void drawCalibrationSetUpScreen();
+  void drawCalibrationScreen();
+
   void waitForTouchRelease();
   void flushTouchBuffer();
 };

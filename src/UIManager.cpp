@@ -356,6 +356,8 @@ void UIManager::drawPlayingScreen()
 }
 */
 
+
+/*
 void UIManager::drawPlayingScreen() 
 {
     tft.fillScreen(RA8875_BLACK);
@@ -417,13 +419,13 @@ void UIManager::drawPlayingScreen()
         // Update game logic: pass int mm coords into Game
         //std::pair<int,int> intLoc = { (int)roundf(x_mm), (int)roundf(y_mm) };
 
-        
+
         std::string result = game.processLocation(sr.total);
         
         
         //std::string result = game.processLocation(intLoc);
 
-        //Serial.println(result.c_str());
+        Serial.println(result.c_str());
 
         // Update score panel
         //redrawScorePanel();
@@ -482,4 +484,180 @@ void UIManager::redrawScorePanel() {
     tft.setTextSize(1);
     tft.print("Current: ");
     tft.print(game.getCurrentPlayerName().c_str());
+}
+*/
+
+void UIManager::drawPlayingScreen() 
+{
+
+    game.initialize();
+    // Start comm simulation
+    comm.startSimulation();
+
+    tft.fillScreen(RA8875_BLACK);
+
+    // --- Left side: draw dartboard ---
+    int leftW = SCREEN_W / 2;  // 400
+    int leftH = SCREEN_H;      // 480
+    int boardCX = leftW / 2;
+    int boardCY = leftH / 2;
+
+    // Compute px/mm for scaling
+    float px_per_mm = (float)leftH / (2.0f * DartConfig::R_double_out);
+    if (px_per_mm * (2.0f * DartConfig::R_double_out) > leftW) {
+        px_per_mm = (leftW - 10) / (2.0f * DartConfig::R_double_out);
+    }
+
+    // Save for later hit drawing
+    this->play_board_cx = boardCX;
+    this->play_board_cy = boardCY;
+    this->play_px_per_mm = px_per_mm;
+    this->play_left_w = leftW;
+
+    // Draw board
+    drawDartboardScaled(tft, boardCX, boardCY, px_per_mm, true);
+
+    // Vertical separator
+    tft.drawLine(leftW, 0, leftW, SCREEN_H, RA8875_WHITE);
+
+    // --- Right panel header ---
+    tft.textMode();
+    tft.textColor(RA8875_WHITE, RA8875_BLACK);
+    tft.textEnlarge(1);
+    tft.textSetCursor(leftW + 12, 8);
+    tft.textWrite("Scores");
+
+    // --- Draw initial score panel ---
+    redrawScorePanel();
+
+    // --- Setup callback for new hits ---
+    comm.onNewLocation([this, leftW](std::pair<int,int> loc) {
+        float x_mm = (float)loc.first;
+        float y_mm = (float)loc.second;
+        Serial.println(x_mm);
+        Serial.println(y_mm);
+
+        // Compute score
+        ScoreResult sr = computeScoreFromMM(x_mm, y_mm);
+        Serial.println(sr.total);
+        Serial.println();
+
+        // Draw hit marker on board (do NOT redraw the board)
+        int px = mmToPxX(x_mm, this->play_board_cx, this->play_px_per_mm);
+        int py = mmToPxY(y_mm, this->play_board_cy, this->play_px_per_mm);
+        drawHitMarker(tft, px, py, RA8875_YELLOW);
+
+
+        //Serial.println(game.getCurrentPlayerName().c_str());
+        //Serial.println(game.getCurrentPlayerScore());
+        //Serial.println(game.isGameOver());
+
+        // Update game state
+        std::string result = game.processLocation(sr.total);
+        //Serial.println(result.c_str());
+        //Serial.println();
+
+        // Update right panel scores
+        redrawScorePanel();
+
+        // Show last throw
+        int lastY = SCREEN_H - 72;
+        tft.fillRect(leftW + 8, lastY, SCREEN_W - leftW - 16, 40, RA8875_BLACK);
+        tft.textSetCursor(leftW + 12, lastY);
+        char buf[128];
+        if (sr.multiplier == 0) {
+            snprintf(buf, sizeof(buf), "Last: MISS (r=%.1fmm)", sr.r_mm);
+        } else if (sr.baseValue == 50 || sr.baseValue == 25) {
+            snprintf(buf, sizeof(buf), "Last: %d pts (%s) r=%.1fmm", sr.total, sr.reason, sr.r_mm);
+        } else {
+            snprintf(buf, sizeof(buf), "Last: %d x%d = %d (%s) r=%.1fmm", sr.baseValue, sr.multiplier, sr.total, sr.reason, sr.r_mm);
+        }
+        tft.textWrite(buf);
+
+        // Game over check
+        if (game.isGameOver()) {
+            Serial.println("GAME OVER! Resetting the board.");
+
+            //tft.fillScreen(RA8875_RED);
+            tft.textColor(RA8875_WHITE, RA8875_RED);
+            tft.textSetCursor(250, 240);
+            tft.textEnlarge(2);
+            tft.textWrite("GAME OVER!");
+        }
+    });
+
+    
+}
+
+
+void UIManager::redrawScorePanel() {
+    int leftW = this->play_left_w;
+    int x0 = leftW + 12;
+    int y0 = 50;
+    int yStep = 28;
+
+    // Clear just the score portion (not the whole panel)
+    tft.fillRect(leftW + 2, 32, SCREEN_W - leftW - 40, SCREEN_H - 100, RA8875_BLACK);
+
+    auto players = game.getAllPlayers();
+    tft.textMode();           // Ensure using text layer
+    tft.textColor(RA8875_WHITE, RA8875_BLACK);
+    tft.textEnlarge(1);
+
+    for (size_t i = 0; i < players.size(); ++i) {
+        const auto &p = players[i];
+        tft.textSetCursor(x0, y0 + i*yStep);
+
+        if ((int)i == game.getCurrentPlayerIndex()) {
+            tft.textWrite("> ");   // mark current player
+        } else {
+            tft.textWrite("  ");
+        }
+
+        char buf[64];
+        snprintf(buf, sizeof(buf), "%s : %d", p.name.c_str(), p.score);
+        tft.textWrite(buf);
+    }
+
+    // Show current player
+    tft.textSetCursor(x0, y0 + players.size()*yStep + 8);
+    tft.textWrite("Current: ");
+    tft.textWrite(game.getCurrentPlayerName().c_str());
+}
+
+
+void UIManager::drawCalibrationSetUpScreen()
+{
+  //select number of calibration point to use 
+
+  //instructions?
+}
+
+void UIManager::drawCalibrationScreen() 
+{
+    tft.fillScreen(RA8875_BLACK);
+    tft.textMode();
+    tft.textColor(RA8875_WHITE, RA8875_BLACK);
+    tft.textEnlarge(1);
+
+    tft.textSetCursor(100, 50);
+    tft.textWrite("Calibration Screen");
+
+    //draw full dart board 
+
+    //read in joystick position for a cursor to move around the screen
+ 
+    //print estimated score for a throw 
+    //user moves cursor to "true" location 
+    //print out score for "true" location 
+
+    //submit "true" location
+
+    //tracker of how many more calibration points are needed 
+
+    //direct back to playing screen
+
+
+
+    // Further calibration steps would go here...
 }
