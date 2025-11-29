@@ -171,6 +171,9 @@ void UIManager::handleTouch(uint16_t x, uint16_t y) {
         waitForTouchRelease();
         currentState = PLAYING;
         drawPlayingScreen();
+
+        //initialize game here?? should not call back again 
+        game.initialize();
       }
       break;
     }
@@ -358,10 +361,10 @@ void UIManager::drawPlayerCountScreen() {
 void UIManager::drawPlayingScreen() 
 {
 
-    game.initialize();
+    //game.initialize();
 
     // Start comm simulation
-    comm.startSimulation();
+    //comm.startSimulation();
 
     tft.fillScreen(RA8875_BLACK);
 
@@ -400,7 +403,7 @@ void UIManager::drawPlayingScreen()
     redrawScorePanel();
 
     //callback for new locations
-    comm.onNewLocation([this, leftW](std::pair<int,int> loc) {
+    comm.onNewLocation([this, leftW](std::pair<float,float> loc) {
         float x_mm = (float)loc.first;
         float y_mm = (float)loc.second;
         

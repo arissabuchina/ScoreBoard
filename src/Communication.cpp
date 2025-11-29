@@ -85,12 +85,10 @@ void Communication::begin() {
 #include <Game.h>
 #include <vector>
 #include <utility>
-
 #include <WiFi.h>
 #include <esp_now.h>
 
 //packet structure for receiving location data
-//might need to adjsut depending on how data is sent??????
 typedef struct {
     float x;
     float y;
@@ -98,7 +96,6 @@ typedef struct {
 
 // Forward reference so static callback can reach class instance
 static Communication* globalCommPtr = nullptr;
-
 
 Communication::Communication()
 {
@@ -109,7 +106,6 @@ Communication::Communication()
     lastUpdateTime = millis();
     simulate = true;   // Start in simulation mode until real data arrives
 }
-
 
 // Demo path for fallback simulation
 void Communication::getLocations()
@@ -174,11 +170,18 @@ void onEspNowReceive(const uint8_t* mac, const uint8_t* data, int len)
 {
     if (!globalCommPtr) return;
 
+    Serial.print("Received data");
+
     globalCommPtr->lastReceiveTime = millis();
 
     if (len == sizeof(LocationPacket)) {
         LocationPacket pkt;
         memcpy(&pkt, data, sizeof(pkt));
+        /*Serial.print(" X: ");
+        Serial.print(pkt.x);
+        Serial.print(" Y: ");
+        Serial.print(pkt.y);
+        Serial.println();*/
 
         if (globalCommPtr->callback) {
             globalCommPtr->callback({ pkt.x, pkt.y });

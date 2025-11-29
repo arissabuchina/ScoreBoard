@@ -117,10 +117,12 @@ void loop() {
 #include "Game.h"
 #include "Communication.h"
 
+//driver pins
 #define RA8875_CS   17
 #define RA8875_RST  16
 #define RA8875_INT 7
 
+//joystick pins 
 #define VRX_PIN 11
 #define VRY_PIN 13
 
@@ -153,20 +155,15 @@ void setup() {
 
   ui.begin();
   comm.begin();
+  delay(5000);
 
 }
 
 void loop() 
 {
   ui.update();
-  comm.update(); // handles dart detection
+  //comm.update(); // handles dart detection
 
   delay(10);
 }
-
-
-
-
-
-
 
