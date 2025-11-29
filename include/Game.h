@@ -18,7 +18,6 @@ public:
     void setStrategy(std::shared_ptr<GameStrategy> strategy);
     void initialize();
 
-    //switch to floats - in mm 
     std::string processLocation(int points);
     std::string getCurrentPlayerName();
     int getCurrentPlayerScore();
@@ -27,8 +26,6 @@ public:
 
     void startGame();
     int getCurrentPlayerIndex() const;
-
-    //int getScoreFromLocation(std::pair<int, int> location);
 
 private:
     void nextPlayer();

@@ -71,5 +71,8 @@ ScoreResult computeScoreFromMM(float x_mm, float y_mm) {
     r.multiplier = 1;
     r.total = base;
     r.reason = "single";
+
+    
+
     return r;
 }

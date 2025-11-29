@@ -124,12 +124,9 @@ void loop() {
 #define VRX_PIN 11
 #define VRY_PIN 13
 
-
-
 Adafruit_RA8875 tft = Adafruit_RA8875(RA8875_CS, RA8875_RST);
 Game game;
 Communication comm;
-
 UIManager ui(tft, game, comm);
 
 void setup() {
@@ -148,10 +145,10 @@ void setup() {
   tft.PWM1config(true, RA8875_PWM_CLK_DIV1024);
   tft.PWM1out(255);
 
-  // Enable touch inside the RA8875 chip
+  //enable touch inside the RA8875 chip
   tft.touchEnable(true);
 
-  // Setup the INT pin
+  //Setup the INT pin
   pinMode(RA8875_INT, INPUT);
 
   ui.begin();
@@ -161,11 +158,10 @@ void setup() {
 
 void loop() 
 {
-
   ui.update();
   comm.update(); // handles dart detection
 
-  delay(10); // small delay to avoid overwhelming the CPU
+  delay(10);
 }
 
 

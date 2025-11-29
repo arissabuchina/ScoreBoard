@@ -59,7 +59,7 @@ void drawDartboardScaled(Adafruit_RA8875 &tft, int cx, int cy, float px_per_mm, 
         drawAnnulusSector(tft, cx, cy, px_per_mm, DartConfig::R_triple_out, DartConfig::R_double_in, a0, a1, singleColor, 6);
     }
 
-    // Triple and double rings (same as before)
+    //triple and double rings 
     for (int i = 0; i < 20; ++i) {
         float centerDeg = -90.0f + i * wedge;
         float a0 = centerDeg - wedge/2.0f;
@@ -70,17 +70,17 @@ void drawDartboardScaled(Adafruit_RA8875 &tft, int cx, int cy, float px_per_mm, 
                           a0, a1, (i%2==0)? RA8875_GREEN : RA8875_RED, 6);
     }
 
-    // Bull
+    //bullseye
     tft.fillCircle(cx, cy, (int)roundf(DartConfig::R_bull_inner * px_per_mm), RA8875_RED);
     tft.drawCircle(cx, cy, (int)roundf(DartConfig::R_bull_outer * px_per_mm), RA8875_GREEN);
 
-    // Ring outlines
+    //ring outlines
     tft.drawCircle(cx, cy, (int)roundf(DartConfig::R_triple_in * px_per_mm), RA8875_WHITE);
     tft.drawCircle(cx, cy, (int)roundf(DartConfig::R_triple_out * px_per_mm), RA8875_WHITE);
     tft.drawCircle(cx, cy, (int)roundf(DartConfig::R_double_in * px_per_mm), RA8875_WHITE);
     tft.drawCircle(cx, cy, (int)roundf(DartConfig::R_double_out * px_per_mm), RA8875_WHITE);
 
-    // Radial separators
+    //radial separators
     for (int i = 0; i < 20; ++i) {
         float ang = (-90.0f - i * wedge) * (M_PI/180.0f);
         int x_end = mmToPxX(DartConfig::R_double_out * cosf(ang), cx, px_per_mm);
@@ -88,7 +88,7 @@ void drawDartboardScaled(Adafruit_RA8875 &tft, int cx, int cy, float px_per_mm, 
         tft.drawLine(cx, cy, x_end, y_end, RA8875_WHITE);
     }
 
-    // --- Draw sector numbers inside half-screen ---
+    //draw section numbers
     if (drawLabels) {
         float numR = DartConfig::R_double_out * 0.90f;  // 90% of outer radius
         tft.textMode();
@@ -114,6 +114,8 @@ void drawDartboardScaled(Adafruit_RA8875 &tft, int cx, int cy, float px_per_mm, 
             tft.textWrite(buf);
         }
     }
+
+    
 }
 
 
