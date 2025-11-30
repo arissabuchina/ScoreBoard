@@ -18,7 +18,6 @@ void Game::reset() {
 
 void Game::setStrategy(std::shared_ptr<GameStrategy> s) {
     strategy = s;
-    
 }
 
 void Game::initialize(){

@@ -626,6 +626,7 @@ void UIManager::drawCalibrationScreen()
     cursorY = cy;
 }
 
+/*
 // Map joystick raw value into -1.0 ... +1.0
 float normalizeJoy(int val, int minV, int midV, int maxV)
 {
@@ -635,19 +636,24 @@ float normalizeJoy(int val, int minV, int midV, int maxV)
         return (float)(val - midV) / (float)(maxV - midV);
     }
 }
+*/
 
 void UIManager::updateJoystick() {
     int rawX = analogRead(VRX_PIN);  // 0–4095
     int rawY = analogRead(VRY_PIN);
 
-    const int centerX = 1884;
-    const int centerY = 1951;
-    const int minVal = 86;
+    //Serial.println("Raw Joystick: ");
+    //Serial.println(rawX);
+    //Serial.println(rawY);
+    delay(90);
+    const int centerX = 1997;
+    const int centerY = 1907;
+    const int minVal = 0;
     const int maxVal = 4095;
 
     // Normalize to [-1, +1]
     joyX = (float)(rawX - centerX) / (maxVal - centerX);
-    joyY = (float)(rawY - centerY) / (maxVal - centerY);
+    joyY = -(float)(rawY - centerY) / (maxVal - centerY);
 
     // Deadzone
     const float dead = 0.08f;

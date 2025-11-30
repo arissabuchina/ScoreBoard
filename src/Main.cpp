@@ -124,7 +124,8 @@ void loop() {
 
 //joystick pins 
 #define VRX_PIN 11
-#define VRY_PIN 13
+#define VRY_PIN 12
+#define SW_PIN 13
 
 Adafruit_RA8875 tft = Adafruit_RA8875(RA8875_CS, RA8875_RST);
 Game game;
