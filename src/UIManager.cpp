@@ -425,6 +425,9 @@ void UIManager::drawPlayingScreen()
 
         //update game state
         std::string result = game.processLocation(sr.total);
+        Serial.println("Game Results: ");
+        Serial.println(result.c_str());
+
         //update right panel scores
         redrawScorePanel();
 
@@ -475,7 +478,8 @@ void UIManager::redrawScorePanel() {
     int yStep = 28;
 
     //clear just the score half
-    tft.fillRect(leftW + 2, 100, SCREEN_W - leftW - 40, SCREEN_H - 200, RA8875_BLACK);
+    tft.fillRect(leftW + 2, 40, SCREEN_W - leftW - 20, SCREEN_H - 80, RA8875_BLACK);
+
 
     auto players = game.getAllPlayers();
     tft.textMode();           // Ensure using text layer
