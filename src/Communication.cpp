@@ -132,7 +132,7 @@ void Communication::getLocations()
         {0.0f, 0.0f}*/
     
     //test around the board sections in order
-    /*locations = {
+    locations = {
                     {   0.0f,   60.0f },  // 20
                     {  18.5f,   57.1f },  // 1
                     {  35.3f,   49.0f },  // 18
@@ -153,8 +153,9 @@ void Communication::getLocations()
                     { -48.8f,   35.3f },  // 9
                     { -35.3f,   49.0f },  // 12
                     { -18.5f,   57.1f }  // 5
-                };*/
-    locations = {
+                };
+                
+    /*locations = {
         {   0.0f,  103.0f },   // 20
         {  31.7f,  97.8f  },   // 1
         {  60.5f,  83.1f  },   // 18
@@ -175,7 +176,7 @@ void Communication::getLocations()
         { -83.1f,  60.5f  },   // 9
         { -60.5f,  83.1f  },   // 12
         { -31.7f,  97.8f  }   // 5
-    };
+    };*/
 }
 
 void Communication::startSimulation()

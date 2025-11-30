@@ -511,10 +511,10 @@ void UIManager::drawPlayingScreen()
         Serial.println();
 
         //avg of time - show that would be under the 100ms requirement for real-time
-        num_throws += 1;
+        /*num_throws += 1;
         total_time += elapsedTime;
         Serial.println("Average Time: ");
-        Serial.println(total_time / num_throws);
+        Serial.println(total_time / num_throws);*/
     });
 
 
