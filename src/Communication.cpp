@@ -226,7 +226,7 @@ void Communication::update()
 
     if(!calibrating)
     {
-        if (millis() - lastUpdateTime > 1000) {
+        if (millis() - lastUpdateTime > 2000) {
             lastReceiveTime = millis();
             lastUpdateTime = millis();
 
