@@ -209,7 +209,7 @@ void Communication::begin()
     Serial.println("ESP-NOW initialized successfully!");
 
     //register the receive callback
-    esp_now_register_recv_cb(onEspNowReceive);
+    //esp_now_register_recv_cb(onEspNowReceive);
 
     esp_now_peer_info_t peerInfo = {};
     const uint8_t peerAddress[6] = {0xFC, 0x01, 0x2C, 0xDC, 0x52, 0x68};
@@ -225,4 +225,3 @@ void Communication::begin()
 
     Serial.println("ESP-NOW peer added successfully!");
 }
-

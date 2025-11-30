@@ -179,10 +179,6 @@ void UIManager::handleTouch(uint16_t x, uint16_t y) {
     }
     case PLAYING:
     {
-      if(comm.calibrating)
-      {
-        comm.calibrating = false;
-      }
       
       if (x >= 600 && x <= 800 && y >= 400 && y <= 480) 
       {
@@ -241,6 +237,9 @@ void UIManager::handleTouch(uint16_t x, uint16_t y) {
             if (calIndex == NUM_CAL_POINTS) {
                 // move on to calibration compute stage
                 //run calibration with points
+                calIndex = 0;
+                comm.calibrating = false;
+
                 flushTouchBuffer();
                 waitForTouchRelease();
                 currentState = PLAYING;
@@ -323,6 +322,9 @@ void UIManager::drawGameModeSelectScreen()
     tft.textColor(RA8875_BLUE, RA8875_WHITE);
     tft.textEnlarge(1);
 
+    tft.textSetCursor(100, 50);
+    tft.textWrite("Select Game Mode:");
+
     tft.textSetCursor(100, 100);
     tft.textWrite("501");
 
@@ -360,11 +362,8 @@ void UIManager::drawPlayerCountScreen() {
 
 void UIManager::drawPlayingScreen() 
 {
-
-    //game.initialize();
-
     // Start comm simulation
-    //comm.startSimulation();
+    comm.startSimulation();
 
     tft.fillScreen(RA8875_BLACK);
 
@@ -404,10 +403,11 @@ void UIManager::drawPlayingScreen()
 
     //callback for new locations
     comm.onNewLocation([this, leftW](std::pair<float,float> loc) {
+        
+        //saving each coordinate location 
         float x_mm = (float)loc.first;
         float y_mm = (float)loc.second;
         
-
         //compute score from location
         sr = computeScoreFromMM(x_mm, y_mm);
 
@@ -416,11 +416,6 @@ void UIManager::drawPlayingScreen()
         Serial.println(y_mm);
         Serial.println("Points Scored: ");
         Serial.println(sr.total);
-
-        //Serial.println("Base: " + sr.baseValue);
-        //Serial.print(sr.baseValue);
-        //Serial.println("and mult: " + sr.multiplier);
-        //Serial.print(sr.reason);
 
         //hit marker on board 
         int px = mmToPxX(x_mm, this->play_board_cx, this->play_px_per_mm);
@@ -433,9 +428,7 @@ void UIManager::drawPlayingScreen()
         //update right panel scores
         redrawScorePanel();
 
-        //THIS IS NOT PRINTING?????????????????????????????????????????????
-        // Show last throw
-        
+        //show last throw
         int lastY = SCREEN_H - 72;
         tft.fillRect(leftW + 8, lastY, SCREEN_W - leftW - 16, 40, RA8875_BLACK);
         tft.textSetCursor(leftW + 12, lastY);
@@ -452,22 +445,22 @@ void UIManager::drawPlayingScreen()
         //game over check
         if (game.isGameOver()) {
             Serial.println("GAME OVER! Resetting the board.");
-
-            //tft.fillScreen(RA8875_RED);
             tft.textColor(RA8875_WHITE, RA8875_RED);
             tft.textSetCursor(250, 240);
             tft.textEnlarge(2);
             tft.textWrite("GAME OVER!");
         }
 
+        //time from recieving location to score calculated for TESTING!! 
         elapsedTime = millis() - comm.lastReceiveTime;
         Serial.println("Time: ");
         Serial.println(elapsedTime);
         Serial.println();
         Serial.println();
+        //avg of time - show that would be under the 100ms requirement for real-time
     });
 
-  // Calibration button
+    // Calibration button
     tft.textColor(RA8875_WHITE, RA8875_BLUE);
     tft.textEnlarge(1);
     tft.textSetCursor(630, 450);
@@ -519,10 +512,10 @@ void UIManager::redrawScorePanel() {
 
 void UIManager::drawCalibrationSetUpScreen()
 {
-  tft.fillScreen(RA8875_BLACK);
+  tft.fillScreen(RA8875_WHITE);
 
   tft.textMode();
-  tft.textColor(RA8875_WHITE, RA8875_BLACK);
+  tft.textColor(RA8875_BLUE, RA8875_WHITE);
   tft.textEnlarge(1);
 
   tft.textSetCursor(40, 40);
@@ -534,6 +527,14 @@ void UIManager::drawCalibrationSetUpScreen()
   tft.textSetCursor(40, 300);
   tft.textWrite("3");
 
+  tft.textSetCursor(40, 400);
+  tft.textWrite("4");
+
+  tft.textSetCursor(40, 500);
+  tft.textWrite("5");
+
+  tft.textSetCursor(40, 600);
+  tft.textWrite("6");
 }
 
 void UIManager::drawCalibrationScreen() 

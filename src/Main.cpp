@@ -162,7 +162,7 @@ void setup() {
 void loop() 
 {
   ui.update();
-  //comm.update(); // handles dart detection
+  comm.update(); // handles dart detection
 
   delay(10);
 }
