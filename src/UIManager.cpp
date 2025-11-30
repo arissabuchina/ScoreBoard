@@ -182,7 +182,6 @@ void UIManager::handleTouch(uint16_t x, uint16_t y) {
       
       if (x >= 600 && x <= 800 && y >= 400 && y <= 480) 
       {
-        NUM_CAL_POINTS = 3;
         Serial.println("Calibration button pressed!");
         comm.calibrating = true;
         flushTouchBuffer();
@@ -191,12 +190,42 @@ void UIManager::handleTouch(uint16_t x, uint16_t y) {
         drawCalibrationSetUpScreen(); 
 
       }
+      if (x >= 400 && x <= 500 && y >= 400 && y <= 480) 
+      {
+        Serial.println("Adjust Score Pressed!");
+        comm.calibrating = true;
+        flushTouchBuffer();
+        waitForTouchRelease();
+        currentState = FIX_SCORE;
+        drawAdjustScore(); 
+
+      }
       break;
     }
     case CALIBRATION_SETUP:
     {
-      if(x >= 0 && x <= 100 && y >= 250 && y <= 400)
+      if(y >= 150 && y <= 250)
       {
+        if (x >= 25 && x <= 65)
+        {
+          NUM_CAL_POINTS = 3;
+          Serial.println(NUM_CAL_POINTS);
+        }
+        else if (x >= 125 && x <= 165)
+        {
+          NUM_CAL_POINTS = 4;
+          Serial.println(NUM_CAL_POINTS);
+        }
+        else if (x >= 225 && x <= 265)
+        {
+          NUM_CAL_POINTS = 5;
+          Serial.println(NUM_CAL_POINTS);
+        }
+        else if (x >= 325 && x <= 365)
+        {
+          NUM_CAL_POINTS = 6;
+          Serial.println(NUM_CAL_POINTS);
+        }
         Serial.println("Calibration set up!");
         flushTouchBuffer();
         waitForTouchRelease();
@@ -249,7 +278,11 @@ void UIManager::handleTouch(uint16_t x, uint16_t y) {
       }
       break;
     } 
-      
+    case FIX_SCORE:
+    {
+      // Future implementation for fixing score
+      break;
+    } 
   }
 
 }
@@ -476,8 +509,20 @@ void UIManager::drawPlayingScreen()
         Serial.println(elapsedTime);
         Serial.println();
         Serial.println();
+
         //avg of time - show that would be under the 100ms requirement for real-time
+        num_throws += 1;
+        total_time += elapsedTime;
+        Serial.println("Average Time: ");
+        Serial.println(total_time / num_throws);
     });
+
+
+    // fix score button
+    tft.textColor(RA8875_WHITE, RA8875_BLUE);
+    tft.textEnlarge(1);
+    tft.textSetCursor(410, 450);
+    tft.textWrite("Adjust Score");
 
     // Calibration button
     tft.textColor(RA8875_WHITE, RA8875_BLUE);
@@ -627,8 +672,21 @@ void UIManager::updateCursor() {
 
 void UIManager::drawCursor()
 {
-    // 2. Draw cursor at the new location
     tft.fillCircle(cursorX, cursorY, 5, RA8875_RED);
     tft.drawCircle(cursorX, cursorY, 7, RA8875_WHITE);
+    //try to get trailing gone 
 }
 
+
+void UIManager::drawAdjustScore() 
+{
+    tft.fillScreen(RA8875_WHITE);
+
+    tft.textMode();
+    tft.textColor(RA8875_BLUE, RA8875_WHITE);
+    tft.textEnlarge(1);
+
+    tft.textSetCursor(40, 40);
+    tft.textWrite("Adjust Score - Coming Soon!");
+
+}

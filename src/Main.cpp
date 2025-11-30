@@ -119,8 +119,8 @@ void loop() {
 
 //driver pins
 #define RA8875_CS   17
-#define RA8875_RST  16
-#define RA8875_INT 7
+#define RA8875_RST  18
+#define RA8875_INT 19
 
 //joystick pins 
 #define VRX_PIN 11
@@ -133,9 +133,10 @@ UIManager ui(tft, game, comm);
 
 void setup() {
   Serial.begin(115200);
+  //Serial.println("hello");
 
   //sck, miso, mosi
-  SPI.begin(3, 8, 18);
+  SPI.begin(7, 15, 16);
 
   if (!tft.begin(RA8875_800x480)) {
     Serial.println("Display not found");

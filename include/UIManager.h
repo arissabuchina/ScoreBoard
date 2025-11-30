@@ -18,7 +18,8 @@ enum UIState {
   SELECT_PLAYERS,
   PLAYING,
   CALIBRATION_SETUP,
-  CALIBRATION
+  CALIBRATION,
+  FIX_SCORE
 };
 
 struct Button {
@@ -48,7 +49,7 @@ public:
   float calib_board_cy = 0.0f;
   float calib_px_per_mm = 1.0f;
   int calIndex = 0;
-  int NUM_CAL_POINTS = 5;
+  int NUM_CAL_POINTS = 3;
 
   private:
   Adafruit_RA8875 &tft;
@@ -68,6 +69,7 @@ public:
   void redrawScorePanel();
   void drawCalibrationSetUpScreen();
   void drawCalibrationScreen();
+  void drawAdjustScore();
   void waitForTouchRelease();
   void flushTouchBuffer();
   void updateCalibration();
@@ -96,6 +98,8 @@ public:
   std::vector<std::pair<int,int>> hitMarkers;
   int lastPlayerIndex = -1;
 
+  int total_time = 0;
+  int num_throws = 0;
 
 };
 
