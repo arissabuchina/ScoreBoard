@@ -417,16 +417,32 @@ void UIManager::drawPlayingScreen()
         Serial.println("Points Scored: ");
         Serial.println(sr.total);
 
-        //hit marker on board 
-        int px = mmToPxX(x_mm, this->play_board_cx, this->play_px_per_mm);
-        int py = mmToPxY(y_mm, this->play_board_cy, this->play_px_per_mm);
-        drawHitMarker(tft, px, py, RA8875_YELLOW);
-
 
         //update game state
         std::string result = game.processLocation(sr.total);
         Serial.println("Game Results: ");
         Serial.println(result.c_str());
+
+
+        int currentPlayerIndex = game.getCurrentPlayerIndex();
+        if(currentPlayerIndex != this->lastPlayerIndex) {
+            // New player, clear previous hit markers
+            drawDartboardScaled(tft, this->play_board_cx, this->play_board_cy, this->play_px_per_mm, true);
+            this->hitMarkers.clear();
+            this->lastPlayerIndex = currentPlayerIndex;
+        }
+
+
+        //hit marker on board 
+        int px = mmToPxX(x_mm, this->play_board_cx, this->play_px_per_mm);
+        int py = mmToPxY(y_mm, this->play_board_cy, this->play_px_per_mm);
+        drawHitMarker(tft, px, py, RA8875_YELLOW);
+
+        hitMarkers.push_back({px, py});
+
+
+
+
 
         //update right panel scores
         redrawScorePanel();
@@ -528,16 +544,16 @@ void UIManager::drawCalibrationSetUpScreen()
   tft.textSetCursor(40, 100);
   tft.textWrite("Choose number of calibration points:");
 
-  tft.textSetCursor(40, 300);
+  tft.textSetCursor(50, 200);
   tft.textWrite("3");
 
-  tft.textSetCursor(40, 400);
+  tft.textSetCursor(150, 200);
   tft.textWrite("4");
 
-  tft.textSetCursor(40, 500);
+  tft.textSetCursor(250, 200);
   tft.textWrite("5");
 
-  tft.textSetCursor(40, 600);
+  tft.textSetCursor(350, 200);
   tft.textWrite("6");
 }
 

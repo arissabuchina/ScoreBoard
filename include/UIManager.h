@@ -91,6 +91,12 @@ public:
   ScoreResult sr;
 
   unsigned long elapsedTime = 0;
+
+  // Store pixel locations of hit markers during current player's turn
+  std::vector<std::pair<int,int>> hitMarkers;
+  int lastPlayerIndex = -1;
+
+
 };
 
 #endif
