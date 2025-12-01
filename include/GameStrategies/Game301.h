@@ -7,8 +7,6 @@ public:
     std::string processThrow(int points, Player& player) ;
     bool isGameOver(const std::vector<Player>& players) override;
 
-    bool isBust();
-
 private:
     int getScoreFromLocation(std::pair<int, int> location);
 };

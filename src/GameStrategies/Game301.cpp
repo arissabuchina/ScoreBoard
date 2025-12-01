@@ -14,8 +14,8 @@ std::string Game301::processThrow(int points, Player& player) {
 
     if (newScore < 0) 
     {
-        result += " Bust! Score stays at " + std::to_string(player.score) + "Turn over.";
-        //game.nextPlayer();
+        result += " Bust! Score stays at " + std::to_string(player.score) + ". Turn over.";
+        isBust = true;
     } else if (newScore == 0) {
         player.score = 0;
         result += player.name + " WINS!";

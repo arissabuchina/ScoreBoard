@@ -469,7 +469,7 @@ void UIManager::drawPlayingScreen()
         //hit marker on board 
         int px = mmToPxX(x_mm, this->play_board_cx, this->play_px_per_mm);
         int py = mmToPxY(y_mm, this->play_board_cy, this->play_px_per_mm);
-        drawHitMarker(tft, px, py, RA8875_YELLOW);
+        drawHitMarker(tft, px, py, RA8875_BLUE);
 
         hitMarkers.push_back({px, py});
 
@@ -507,14 +507,16 @@ void UIManager::drawPlayingScreen()
         elapsedTime = millis() - comm.lastReceiveTime;
         Serial.println("Time: ");
         Serial.println(elapsedTime);
-        Serial.println();
-        Serial.println();
+        //Serial.println();
+        //Serial.println();
 
         //avg of time - show that would be under the 100ms requirement for real-time
-        /*num_throws += 1;
+        num_throws += 1;
         total_time += elapsedTime;
         Serial.println("Average Time: ");
-        Serial.println(total_time / num_throws);*/
+        Serial.println(total_time / num_throws);
+        Serial.println();
+        Serial.println();
     });
 
 

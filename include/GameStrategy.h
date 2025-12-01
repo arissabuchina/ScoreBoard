@@ -12,4 +12,6 @@ public:
     virtual bool isGameOver(const std::vector<Player>& players) = 0;
 
     virtual void setPlayersRef(std::vector<Player>& players) { /* default: do nothing */ }
+
+    bool isBust = false;
 };

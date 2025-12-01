@@ -15,7 +15,8 @@ std::string Game501::processThrow(int points, Player& player) {
     std::string result = player.name + " hit " + std::to_string(points) + " points. ";
 
     if (newScore < 0) {
-        result += " Bust! Score stays at " + std::to_string(player.score);
+        result += " Bust! Score stays at " + std::to_string(player.score)  + ". Turn over.";
+        isBust = true;
     } else if (newScore == 0) {
         player.score = 0;
         result += player.name + " WINS!";

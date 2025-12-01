@@ -33,6 +33,15 @@ std::string Game::processLocation(int points) {
     Player &p = players[currentPlayerIndex];
     std::string result = strategy->processThrow(points, p);
 
+    //if bust players turn is over, moves to next player and score is not changed 
+    if(strategy->isBust == true) 
+    {
+        p.dartsThrown = 0;
+        nextPlayer();
+        strategy->isBust = false;
+        return result;
+    }
+
     if (strategy->isGameOver(players)) {
         gameOver = true;
         return result;
